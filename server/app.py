@@ -1,35 +1,37 @@
 #!/usr/bin/env python3
 
-from flask import Flask
+from flask import Flask, Response
 
 app = Flask(__name__)
 
 @app.route('/')
-def index_route():
+def index():
     return '<h1>Python Operations with Flask Routing and Views</h1>'
 
-@app.route('/print/<text>')
-def print_route(text):
-    print(text)  
-    return text
+@app.route('/print/<string:parameter>')
+def print_parameter(parameter):
+    print(parameter)  #
+    return parameter 
 
-@app.route('/count/<int:num>')
-def count_route(num):
-    return '\n'.join(str(i) for i in range(num)) + '\n'
+@app.route('/count/<int:parameter>')
+def count(parameter):
+    output = '\n'.join(str(i) for i in range(parameter)) + '\n'
+    return Response(output, mimetype='text/plain')
 
-@app.route('/math/<int:num1>/<op>/<int:num2>')
-def math_route(num1, op, num2):
-    if op == '+':
-        result = num1 + num2
-    elif op == '-':
-        result = num1 - num2
-    elif op == '*':
-        result = num1 * num2
-    elif op == 'div':
-        result = num1 / num2
-    elif op == '%':
-        result = num1 % num2
-    return str(result)
+@app.route('/math/<int:num1>/<string:operation>/<int:num2>')
+def math(num1, operation, num2):
+    if operation == '+':
+        return str(num1 + num2)
+    elif operation == '-':
+        return str(num1 - num2)
+    elif operation == '*':
+        return str(num1 * num2)
+    elif operation == 'div':
+        return str(num1 / num2)
+    elif operation == '%':
+        return str(num1 % num2)
+    else:
+        return "Invalid operation", 400
 
 
 if __name__ == '__main__':
